@@ -3,18 +3,19 @@ const cardsEstudiantes = document.querySelector("#cardsEstudiantes");
 const cardsProfesores = document.querySelector("#cardsProfesores");
 const templateEstudiante = document.querySelector("#templateEstudiante").content;
 const templateProfesor = document.querySelector("#templateProfesor").content;
+const alert = document.querySelector('.alert'); 
 
 
 const estudiantes = [];
 const profesores = [];
 
 document.addEventListener("click", (e)=>{
-    if(e.target.dataset.nombre){
+    if(e.target.dataset.uid){
         //console.log(e.target.matches(".btn-success"));
         //si esto es true
         if(e.target.matches(".btn-success")){
             estudiantes.map(item => {
-                if(item.nombre === e.target.dataset.nombre){
+                if(item.uid === e.target.dataset.uid){
                     item.setEstado = true;
                 }
                 return item;
@@ -23,7 +24,7 @@ document.addEventListener("click", (e)=>{
         }
         if(e.target.matches(".btn-danger")){
             estudiantes.map(item => {
-                if(item.nombre === e.target.dataset.nombre){
+                if(item.uid === e.target.dataset.uid){
                     item.setEstado = false;
                 }
                 return item;
@@ -40,6 +41,10 @@ document.addEventListener("click", (e)=>{
      constructor(nombre, edad){
          this.nombre = nombre;
          this.edad = edad;
+//date.now -- devuelve el numero de milisegundos transcurridos desde las 00.00 utc 1 ene 1970
+//uid -- user id
+//las comillas invertidas me convierten un numero a string
+         this.uid = `${Date.now()}`;
      }
 
 //Metodo static() -- puede ser accedido sin necesidad de instanciar lo que es persona
@@ -108,8 +113,8 @@ if (this.#estado) {
     ? "Aprobado"
     : "Reprobado";
 
-    clone.querySelector(".btn-success").dataset.nombre = this.nombre;
-    clone.querySelector(".btn-danger").dataset.nombre = this.nombre;
+    clone.querySelector(".btn-success").dataset.uid = this.uid;
+    clone.querySelector(".btn-danger").dataset.uid = this.uid;
  
 return clone;
 } 
@@ -130,12 +135,23 @@ class Profesor extends Persona {
 
 //capturamos el formulario
 formulario.addEventListener('submit', e =>{
-    e.preventDefault()
+    e.preventDefault();
+
+    //Cada vez que se haga un submit se va a limpiar
+    alert.classList.add("d-none");
 //capturar los datos
 const datos = new FormData(formulario) 
 //desestructuracion de datos 
 // ... -- spread operation copia de datos que le ingresan (valores =values)
 const [nombre, edad, opcion] = [...datos.values()];
+
+if(!nombre.trim() || !edad.trim() || !opcion.trim()){
+    console.log("algun dato en blanco")
+//Muy importante este return , por que hace que no siga
+//con las funciones de abajo
+    alert.classList.remove("d-none");
+    return;
+}
 
 //Si elige la opcion Estudiante, bueno hace esto
 if(opcion === "Estudiante"){
