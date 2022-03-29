@@ -1,4 +1,4 @@
-const formulario = document.querySelector("#formulario");
+/*const formulario = document.querySelector("#formulario");
 const cardsEstudiantes = document.querySelector("#cardsEstudiantes");
 const cardsProfesores = document.querySelector("#cardsProfesores");
 const templateEstudiante = document.querySelector("#templateEstudiante").content;
@@ -28,6 +28,7 @@ document.addEventListener("click", (e)=>{
                     item.setEstado = false;
                 }
                 return item;
+
             });
            
         };
@@ -176,4 +177,18 @@ Persona.pintarPersonaUI(profesores, opcion);
 //como es estatico lo puedo pintar abajo del if estudiante!(tengo persona y tipo)
 // Ejecuta y ve si es un estudiante, va a limpiar nuestro textContent, va a crear el fragment
 //y va a ser el recorrido de personas , que tiene en el array de estudiantes.
-//va a entrar a este ciclo y va a ejecutar el clone de cada uno de sus template.
+//va a entrar a este ciclo y va a ejecutar el clone de cada uno de sus template. */
+
+import pintarPlatano, { frutilla as fresa, Fruta} from "./frutas.js";
+//Me aparece igual sandia por que el export default no recibe nombre
+//Por que el archivo q lo esta recibiendo puede renombrarlo como quiera, es sin llaves,solo una vez x documento
+//pueden ser funciones anonimas
+//import melon from "./frutas.js"
+//console.log(melon)
+
+
+const naranja = new Fruta ("🍊");
+console.log(naranja);
+
+pintarPlatano();
+fresa();
