@@ -1,194 +1,47 @@
-/*const formulario = document.querySelector("#formulario");
-const cardsEstudiantes = document.querySelector("#cardsEstudiantes");
-const cardsProfesores = document.querySelector("#cardsProfesores");
-const templateEstudiante = document.querySelector("#templateEstudiante").content;
-const templateProfesor = document.querySelector("#templateProfesor").content;
-const alert = document.querySelector('.alert'); 
+//Con setItem lo guardo! 2 parametros
+//1-- la keys, 2-- valor (String)
+//Nuestro codigo Guarda la key
+/*localStorage.setItem("platano", "🍌");
+//Usualmente lo usamos con un if, preguntando, si existe
+if(localStorage.getItem("platano")){
+const platano = localStorage.getItem("platano")
+console.log(platano);
+}*/
+//Lo muestra, lo obtenemos con getItem
+//Para pintarlo utilizo getItem("key")con la llave guardada
+//Lo pintamos en consola
+//console.log(localStorage.getItem("platano"));
 
+//lo remueve con ("key")
+//localStorage.removeItem("platano")
 
-const estudiantes = [];
-const profesores = [];
+//se puedde guardar todo lo que quieras
+//Clear limpia , destruye todo
+//localStorage.clear()
 
-document.addEventListener("click", (e)=>{
-    if(e.target.dataset.uid){
-        //console.log(e.target.matches(".btn-success"));
-        //si esto es true
-        if(e.target.matches(".btn-success")){
-            estudiantes.map(item => {
-                if(item.uid === e.target.dataset.uid){
-                    item.setEstado = true;
-                }
-                return item;
-            });
-            
-        }
-        if(e.target.matches(".btn-danger")){
-            estudiantes.map(item => {
-                if(item.uid === e.target.dataset.uid){
-                    item.setEstado = false;
-                }
-                return item;
+const frutas = [
+    {
+        nombre: "🍌",
+        color: "amarillo",
+    },
+    {
+        nombre: "🍒",
+        color: "rojo",
+    },
+    {
+        nombre: "🍏",
+        color: "verde",
+    },
+];
+//Regla de oro -- recibe un string
+//JSON.stringify -- convierte un objeto o valor de javascript en una cadena de texto JSON.
+//Lo formatea en JSON como un string para que nosotros lo podamos guardar
+localStorage.setItem("frutas", JSON.stringify(frutas));
 
-            });
-           
-        };
-        Persona.pintarPersonaUI(estudiantes, "Estudiante");
-    }
-});
-
-
-//Creamos persona generica(padre o madre)
- class Persona {
-     constructor(nombre, edad){
-         this.nombre = nombre;
-         this.edad = edad;
-//date.now -- devuelve el numero de milisegundos transcurridos desde las 00.00 utc 1 ene 1970
-//uid -- user id
-//las comillas invertidas me convierten un numero a string
-         this.uid = `${Date.now()}`;
-     }
-
-//Metodo static() -- puede ser accedido sin necesidad de instanciar lo que es persona
-//Se ocupa el UI -- cuando son cosas que se estan enviando al HTML
-     static pintarPersonaUI(personas, tipo){
-      if(tipo === "Estudiante"){
-//Recomendable empezar con el textContent = "" (en 0) sin informacion
-//por que va a ser un ciclo forEach
-        cardsEstudiantes.textContent = "";
-        const fragment = document.createDocumentFragment();
-//Recorremos
-        personas.forEach((item) => {
-            fragment.appendChild(item.agregarNuevoEstudiante());
-        });
-
-        cardsEstudiantes.appendChild(fragment);
-      }
-      if(tipo === "Profesor"){
-          cardsProfesores.textContent ="";
-          const fragment = document.createDocumentFragment(); 
-
-          personas.forEach((item) => {
-            fragment.appendChild(item.agregarNuevoProfesor());
-        });
-        cardsProfesores.appendChild(fragment);
-      }
-     }
- };
-
-//heredamos
-class Estudiante extends Persona {
-//# -- propiedades| que sea privado y que arranque desactivado
-    #estado = false;
-    #estudiante = 'Estudiante';
-
-//Como son prop.privadas tenemos que tener un set() para poder modificarlo
-set setEstado(estado){
-    this.#estado = estado;
- };
-
-//para poder pintar el estudiante
-get getEstudiante(){
-    return this.#estudiante
- };
-
-//Capturar el template, sacar un clone e ir modificando sus propiedades.
-agregarNuevoEstudiante(){
-const clone = templateEstudiante.cloneNode(true);
-//Ahora con el clone podemos acceder a cada una de las propiedades
-clone.querySelector('h5 .text-primary').textContent = this.nombre;
-clone.querySelector('h6').textContent = this.getEstudiante;
-clone.querySelector('.lead').textContent = this.edad;
-
-//En caso que esto de true;
-//className -- reemplaza todas las clases anteriores por las nuevas que le describas
-if (this.#estado) {
-    clone.querySelector(".badge").className = "badge bg-success";
-    clone.querySelector(".btn-success").disabled = true;
-    clone.querySelector(".btn-danger").disabled = false;
-} else {
-    clone.querySelector(".badge").className = "badge bg-danger";
-    clone.querySelector(".btn-danger").disabled = true;
-    clone.querySelector(".btn-success").disabled = false;
+//Lo capturo 
+//Hace lo contrario al otro, viene en un string formateado en json y lo parsea a array de javascript
+//En caso de que exista con un if
+if(localStorage.getItem("frutas")){
+const frutasDesdeLocal = JSON.parse(localStorage.getItem("frutas"));
+console.log(frutas);
 }
-    clone.querySelector(".badge").textContent = this.#estado
-    ? "Aprobado"
-    : "Reprobado";
-
-    clone.querySelector(".btn-success").dataset.uid = this.uid;
-    clone.querySelector(".btn-danger").dataset.uid = this.uid;
- 
-return clone;
-} 
-};
-
-class Profesor extends Persona {
-    #profesor = "Profesor";
-
-    agregarNuevoProfesor(){
-        const clone = templateProfesor.cloneNode(true);
-        clone.querySelector('h5').textContent = this.nombre;
-        clone.querySelector('h6').textContent = this.#profesor;
-        clone.querySelector('.lead').textContent = this.edad;
-        return clone;
-    }
-}
-
-
-//capturamos el formulario
-formulario.addEventListener('submit', e =>{
-    e.preventDefault();
-
-    //Cada vez que se haga un submit se va a limpiar
-    alert.classList.add("d-none");
-//capturar los datos
-const datos = new FormData(formulario) 
-//desestructuracion de datos 
-// ... -- spread operation copia de datos que le ingresan (valores =values)
-const [nombre, edad, opcion] = [...datos.values()];
-
-if(!nombre.trim() || !edad.trim() || !opcion.trim()){
-    console.log("algun dato en blanco")
-//Muy importante este return , por que hace que no siga
-//con las funciones de abajo
-    alert.classList.remove("d-none");
-    return;
-}
-
-//Si elige la opcion Estudiante, bueno hace esto
-if(opcion === "Estudiante"){
-const estudiante = new Estudiante(nombre, edad);
-//Se agrega al array cada estudiante que se ingrese
-estudiantes.push(estudiante);
-Persona.pintarPersonaUI(estudiantes, opcion);
-
-   }; 
-
-//Si elige la opcion Profesor, cumplime esto
-if(opcion === "Profesor"){
-const profesor = new Profesor (nombre, edad)
-profesores.push(profesor);
-Persona.pintarPersonaUI(profesores, opcion);
- };
-});
-
-//Como tenemos un array de Estudiantes y en la class Persona,
-//Tenemos un evento static que no necesita instanciarlo que recibe persona y el tipo,
-//ejemplo: Si el tipo era estudiante nosotros haciamos toda la operacion que completamos,
-//como es estatico lo puedo pintar abajo del if estudiante!(tengo persona y tipo)
-// Ejecuta y ve si es un estudiante, va a limpiar nuestro textContent, va a crear el fragment
-//y va a ser el recorrido de personas , que tiene en el array de estudiantes.
-//va a entrar a este ciclo y va a ejecutar el clone de cada uno de sus template. */
-
-import pintarPlatano, { frutilla as fresa, Fruta} from "./frutas.js";
-//Me aparece igual sandia por que el export default no recibe nombre
-//Por que el archivo q lo esta recibiendo puede renombrarlo como quiera, es sin llaves,solo una vez x documento
-//pueden ser funciones anonimas
-//import melon from "./frutas.js"
-//console.log(melon)
-
-
-const naranja = new Fruta ("🍊");
-console.log(naranja);
-
-pintarPlatano();
-fresa();
